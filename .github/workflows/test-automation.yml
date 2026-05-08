@@ -1,0 +1,126 @@
+name: LMS Automation Test
+
+on:
+  push:
+    branches: [ main, develop, ci-cd-setup ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Jalan setiap hari senin jam 07:00 WIB (00:00 UTC)
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+  # Bisa di-run manual dari GitHub UI
+
+jobs:
+  test:
+    name: Run UI & API Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Setup ChromeDriver
+        uses: nanasess/setup-chromedriver@v2
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Create config file from secrets
+        run: |
+          mkdir -p src/test/resources/config
+          cat > src/test/resources/config/staging.properties << 'EOF'
+          # ===== UI Configuration =====
+          baseUrl=${{ secrets.UI_BASE_URL }}
+          email=${{ secrets.TEST_USER_EMAIL }}
+          password=${{ secrets.TEST_USER_PASSWORD }}
+          
+          # Employee Test Data
+          employee.name=${{ secrets.EMPLOYEE_NAME }}
+          employee.id=${{ secrets.EMPLOYEE_ID }}
+          employee.email=${{ secrets.EMPLOYEE_EMAIL }}
+          employee.phone=${{ secrets.EMPLOYEE_PHONE }}
+          employee.program.studi=${{ secrets.EMPLOYEE_PROGRAM_STUDI }}
+          employee.role=${{ secrets.EMPLOYEE_ROLE }}
+          
+          # Employee Edit Data
+          employee.edit.name=${{ secrets.EMPLOYEE_EDIT_NAME }}
+          employee.edit.email=${{ secrets.EMPLOYEE_EDIT_EMAIL }}
+          employee.edit.phone=${{ secrets.EMPLOYEE_EDIT_PHONE }}
+          employee.edit.role=${{ secrets.EMPLOYEE_EDIT_ROLE }}
+          
+          # ===== API Configuration =====
+          api.base.url=${{ secrets.API_BASE_URL }}
+          api.timeout=${{ secrets.API_TIMEOUT }}
+          api.auth.token=${{ secrets.API_AUTH_TOKEN }}
+          
+          # Test User Credentials
+          test.user.email=${{ secrets.TEST_USER_EMAIL }}
+          test.user.password=${{ secrets.TEST_USER_PASSWORD }}
+          test.user.company.id=${{ secrets.TEST_USER_COMPANY_ID }}
+          
+          # Employee Division ID
+          employee.division.id=${{ secrets.EMPLOYEE_DIVISION_ID }}
+          EOF
+          
+          echo "Config file created successfully"
+
+      - name: Run UI Tests
+        id: ui-tests
+        run: ./gradlew test --tests ui.lms.* --info
+        continue-on-error: true
+
+      - name: Run API Tests
+        id: api-tests
+        run: ./gradlew test --tests api.tests.* --info
+        continue-on-error: true
+
+      - name: Determine overall status
+        id: status
+        run: |
+          if [[ "${{ steps.ui-tests.outcome }}" == "success" ]] && [[ "${{ steps.api-tests.outcome }}" == "success" ]]; then
+            echo "status=success" >> $GITHUB_OUTPUT
+            echo "status_emoji=✅" >> $GITHUB_OUTPUT
+          else
+            echo "status=failure" >> $GITHUB_OUTPUT
+            echo "status_emoji=❌" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload Test Reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-reports-${{ github.run_id }}
+          path: |
+            build/reports/tests/test/
+            reports/*.html
+
+      - name: Send Slack Notification
+        if: always()
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "text": "${{ steps.status.outputs.status_emoji }} *LMS Automation Test Result*\n\n*Status:* ${{ steps.status.outputs.status }}\n*Repository:* ${{ github.repository }}\n*Branch:* ${{ github.ref_name }}\n*Commit:* ${{ github.sha }}\n*UI Tests:* ${{ steps.ui-tests.outcome }}\n*API Tests:* ${{ steps.api-tests.outcome }}\n\nView Details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

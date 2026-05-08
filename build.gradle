@@ -1,0 +1,61 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.automation'
+version = '1.0-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // TestNG
+    testImplementation 'org.testng:testng:7.10.2'
+
+    // Selenium
+    testImplementation 'org.seleniumhq.selenium:selenium-java:4.31.0'
+
+    // Rest Assured
+    testImplementation 'io.rest-assured:rest-assured:5.3.2' // atau versi yang lebih baru
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    implementation 'io.github.cdimascio:dotenv-java:3.0.0'
+
+    // Excel
+    testImplementation 'org.apache.poi:poi-ooxml:5.2.5'
+
+    // Extent Report
+    testImplementation 'com.aventstack:extentreports:5.1.1'
+
+    // Logging
+    testImplementation 'org.slf4j:slf4j-simple:2.0.12'
+
+    // WebDriver Manager
+    implementation 'org.seleniumhq.selenium:selenium-java:4.23.0'
+
+    // WebDriver Manager
+    implementation 'io.github.bonigarcia:webdrivermanager:5.9.1'
+
+    // Apache POI for Excel handling
+    implementation 'org.apache.poi:poi:5.2.5'
+    implementation 'org.apache.poi:poi-ooxml:5.2.5'
+
+    implementation 'com.aventstack:extentreports:5.1.1'
+    implementation 'org.testng:testng:7.10.2'
+    implementation 'org.apache.logging.log4j:log4j-core:2.23.1'
+    implementation 'org.apache.logging.log4j:log4j-api:2.23.1'
+    implementation 'commons-io:commons-io:2.16.1'
+
+}
+
+test {
+    useTestNG() {
+        suites 'src/test/resources/suites/testng.xml'
+    }
+}
