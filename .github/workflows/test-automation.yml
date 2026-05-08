@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ main ]
   schedule:
-    - cron: '0 0 * * 1'  # Setiap Senin jam 07:00 WIB
+    - cron: '0 0 * * 1'
   workflow_dispatch:
 
 jobs:
@@ -14,7 +14,6 @@ jobs:
     name: Run UI & API Tests
     runs-on: ubuntu-latest
     
-    # Tambahkan environment variable untuk Node.js 24
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -38,8 +37,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-            # === PERBAIKAN: Install semua dependencies Chrome di Linux Ubuntu 24.04 ===
-      - name: Install Chrome dependencies
+      - name: Install Chrome dependencies (Ubuntu 24.04)
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -63,23 +61,35 @@ jobs:
             libxrender1 \
             libxss1 \
             libxtst6
-          
+
+      # === PERBAIKAN: Setup Chrome menggunakan action yang lebih baru ===
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1
         with:
           chrome-version: 'stable'
 
-      - name: Setup ChromeDriver
-        uses: nanasess/setup-chromedriver@v2
-        with:
-          chromedriver-version: 'latest'
+      # === PERBAIKAN: Install ChromeDriver dari Chrome for Testing ===
+      - name: Install ChromeDriver
+        run: |
+          # Get Chrome version
+          CHROME_VERSION=$(google-chrome --version | awk '{print $3}')
+          echo "Chrome version: $CHROME_VERSION"
+          
+          # Download ChromeDriver from Chrome for Testing
+          wget -q "https://storage.googleapis.com/chrome-for-testing-public/${CHROME_VERSION}/linux64/chromedriver-linux64.zip"
+          
+          # Extract and install
+          unzip -o chromedriver-linux64.zip
+          sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver
+          
+          # Verify
+          chromedriver --version
 
-      - name: Verify Chrome installation
+      - name: Verify Chrome and ChromeDriver
         run: |
           google-chrome --version
           chromedriver --version
-          which google-chrome
-          which chromedriver
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -122,24 +132,11 @@ jobs:
           EOF
           
           echo "Config file created successfully"
-          cat src/test/resources/config/staging.properties
 
-      # === PERBAIKAN 4: Jalankan UI Tests dengan xvfb-run ===
       - name: Run UI Tests
         id: ui-tests
         run: xvfb-run ./gradlew test --tests ui.lms.* --info --stacktrace
         continue-on-error: true
-
-      - name: Debug UI Failure
-        if: steps.ui-tests.outcome == 'failure'
-        run: |
-          echo "=== UI TESTS FAILED. CHECKING LOGS ==="
-          echo "--- Test results XML ---"
-          find build/test-results/test -name "*.xml" -exec cat {} \;
-          echo "--- Chrome version ---"
-          google-chrome --version || echo "Chrome not found"
-          echo "--- Display check ---"
-          echo "DISPLAY: $DISPLAY"
 
       - name: Run API Tests
         id: api-tests
