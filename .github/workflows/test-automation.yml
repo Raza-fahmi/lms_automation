@@ -6,15 +6,17 @@ on:
   pull_request:
     branches: [ main ]
   schedule:
-    # Jalan setiap hari senin jam 07:00 WIB (00:00 UTC)
-    - cron: '0 0 * * 1'
+    - cron: '0 0 * * 1'  # Setiap Senin jam 07:00 WIB
   workflow_dispatch:
-  # Bisa di-run manual dari GitHub UI
 
 jobs:
   test:
     name: Run UI & API Tests
     runs-on: ubuntu-latest
+    
+    # Tambahkan environment variable untuk Node.js 24
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout code
@@ -36,11 +38,50 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      # === PERBAIKAN 1: Install semua dependencies Chrome di Linux ===
+      - name: Install Chrome dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            xvfb \
+            fonts-liberation \
+            libappindicator3-1 \
+            libasound2 \
+            libatk-bridge2.0-0 \
+            libgbm1 \
+            libgtk-3-0 \
+            libnspr4 \
+            libnss3 \
+            libx11-xcb1 \
+            libxcb-dri3-0 \
+            libxcomposite1 \
+            libxcursor1 \
+            libxdamage1 \
+            libxfixes3 \
+            libxi6 \
+            libxrandr2 \
+            libxrender1 \
+            libxss1 \
+            libxtst6
+
+      # === PERBAIKAN 2: Setup Chrome dengan versi spesifik ===
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: 'stable'
 
       - name: Setup ChromeDriver
         uses: nanasess/setup-chromedriver@v2
+        with:
+          chromedriver-version: 'latest'
+
+      # === PERBAIKAN 3: Verifikasi Chrome dan ChromeDriver ===
+      - name: Verify Chrome installation
+        run: |
+          google-chrome --version
+          chromedriver --version
+          which google-chrome
+          which chromedriver
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -83,24 +124,28 @@ jobs:
           EOF
           
           echo "Config file created successfully"
+          cat src/test/resources/config/staging.properties
 
+      # === PERBAIKAN 4: Jalankan UI Tests dengan xvfb-run ===
       - name: Run UI Tests
         id: ui-tests
-        run: ./gradlew test --tests ui.lms.* --info --stacktrace
+        run: xvfb-run ./gradlew test --tests ui.lms.* --info --stacktrace
         continue-on-error: true
-      # Tambahkan step DEBUG di bawah ini
+
       - name: Debug UI Failure
         if: steps.ui-tests.outcome == 'failure'
         run: |
           echo "=== UI TESTS FAILED. CHECKING LOGS ==="
-          # Print 100 baris terakhir dari laporan HTML untuk melihat error
-          tail -n 100 build/reports/tests/test/classes/ui.lms.EmployeeTest.html
-          # Atau cari pesan error di log Gradle
-          grep -r "FAILED\|Exception\|Error" build/test-results/test/ --include="*.xml" || echo "No detailed error found."
+          echo "--- Test results XML ---"
+          find build/test-results/test -name "*.xml" -exec cat {} \;
+          echo "--- Chrome version ---"
+          google-chrome --version || echo "Chrome not found"
+          echo "--- Display check ---"
+          echo "DISPLAY: $DISPLAY"
 
       - name: Run API Tests
         id: api-tests
-        run: ./gradlew test --tests api.tests.* --info
+        run: ./gradlew test --tests api.tests.* --info --stacktrace
         continue-on-error: true
 
       - name: Determine overall status
@@ -122,6 +167,8 @@ jobs:
           path: |
             build/reports/tests/test/
             reports/*.html
+            build/test-results/test/*.xml
+          retention-days: 30
 
       - name: Send Slack Notification
         if: always()
