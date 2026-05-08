@@ -6,15 +6,18 @@ on:
   pull_request:
     branches: [ main ]
   schedule:
-    # Jalan setiap hari senin jam 07:00 WIB (00:00 UTC)
+    # Jalan setiap hari Senin jam 07:00 WIB (00:00 UTC)
     - cron: '0 0 * * 1'
   workflow_dispatch:
-  # Bisa di-run manual dari GitHub UI
 
 jobs:
   test:
     name: Run UI & API Tests
     runs-on: ubuntu-latest
+    
+    # Tambahkan environment variables untuk Node.js 24 (opsional, hilangkan warning)
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout code
@@ -36,14 +39,50 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      # PERBAIKAN 1: Install system dependencies untuk Chrome di Linux
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            xvfb \
+            libxkbcommon-x11-0 \
+            libxcb-icccm4 \
+            libxcb-image0 \
+            libxcb-keysyms1 \
+            libxcb-randr0 \
+            libxcb-render-util0 \
+            libxcb-xinerama0 \
+            libxcb-xfixes0 \
+            libxi6 \
+            libgconf-2-4 \
+            libgbm1 \
+            fonts-liberation \
+            libappindicator3-1 \
+            libasound2 \
+            libatk-bridge2.0-0 \
+            libgtk-3-0
+
+      # PERBAIKAN 2: Setup Chrome dengan versi stabil
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: 'stable'
 
+      # PERBAIKAN 3: Setup ChromeDriver yang sesuai
       - name: Setup ChromeDriver
         uses: nanasess/setup-chromedriver@v2
+        with:
+          # Tidak perlu spesifik versi, akan match dengan Chrome
+          chromedriver-version: 'latest'
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+
+      # PERBAIKAN 4: Tambahkan verify Chrome installation
+      - name: Verify Chrome and ChromeDriver
+        run: |
+          google-chrome --version
+          chromedriver --version
 
       - name: Create config file from secrets
         run: |
@@ -84,15 +123,31 @@ jobs:
           
           echo "Config file created successfully"
 
+      # PERBAIKAN 5: Run UI Tests dengan xvfb-run (virtual display untuk Linux)
       - name: Run UI Tests
         id: ui-tests
-        run: ./gradlew test --tests ui.lms.* --info
+        run: xvfb-run ./gradlew test --tests ui.lms.* --info --stacktrace
         continue-on-error: true
 
+      # PERBAIKAN 6: Run API Tests (tidak perlu xvfb)
       - name: Run API Tests
         id: api-tests
-        run: ./gradlew test --tests api.tests.* --info
+        run: ./gradlew test --tests api.tests.* --info --stacktrace
         continue-on-error: true
+
+      # PERBAIKAN 7: Debug jika UI Tests gagal
+      - name: Debug UI Tests Failure
+        if: steps.ui-tests.outcome == 'failure'
+        run: |
+          echo "=== UI TESTS FAILED. CHECKING LOGS ==="
+          echo "--- Last 50 lines of test report ---"
+          if [ -f build/reports/tests/test/index.html ]; then
+            grep -A5 -B5 "FAILED\|Exception\|Error" build/reports/tests/test/index.html | head -100 || true
+          fi
+          echo "--- Checking test output XML ---"
+          if [ -d build/test-results/test ]; then
+            cat build/test-results/test/*.xml | grep -E "failure|error" | head -20 || true
+          fi
 
       - name: Determine overall status
         id: status
@@ -105,6 +160,7 @@ jobs:
             echo "status_emoji=❌" >> $GITHUB_OUTPUT
           fi
 
+      # PERBAIKAN 8: Upload laporan (termasuk screenshot jika ada)
       - name: Upload Test Reports
         uses: actions/upload-artifact@v4
         if: always()
@@ -113,6 +169,9 @@ jobs:
           path: |
             build/reports/tests/test/
             reports/*.html
+            **/screenshots/*.png
+            build/test-results/test/*.xml
+          retention-days: 30
 
       - name: Send Slack Notification
         if: always()
