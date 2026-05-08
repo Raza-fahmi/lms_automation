@@ -38,7 +38,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # === PERBAIKAN 1: Install semua dependencies Chrome di Linux ===
+            # === PERBAIKAN: Install semua dependencies Chrome di Linux Ubuntu 24.04 ===
       - name: Install Chrome dependencies
         run: |
           sudo apt-get update
@@ -46,7 +46,7 @@ jobs:
             xvfb \
             fonts-liberation \
             libappindicator3-1 \
-            libasound2 \
+            libasound2t64 \
             libatk-bridge2.0-0 \
             libgbm1 \
             libgtk-3-0 \
@@ -63,8 +63,7 @@ jobs:
             libxrender1 \
             libxss1 \
             libxtst6
-
-      # === PERBAIKAN 2: Setup Chrome dengan versi spesifik ===
+          
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1
         with:
@@ -75,7 +74,6 @@ jobs:
         with:
           chromedriver-version: 'latest'
 
-      # === PERBAIKAN 3: Verifikasi Chrome dan ChromeDriver ===
       - name: Verify Chrome installation
         run: |
           google-chrome --version
