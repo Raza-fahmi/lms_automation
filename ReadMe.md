@@ -1,1 +1,1 @@
-api masuk ke add, edit, delete employee(deepseek) https://chat.deepseek.com/a/chat/s/3e8f612c-398f-4842-88f1-7e93e204c971
+api masuk ke add, edit, delete employee
