@@ -11,7 +11,7 @@ public class BaseTest {
     @Parameters("browser")
     public void setUp(@Optional("chrome") String browser) {
         // create driver dari factory
-        DriverManager.setDriver(DriverFactory.createDriver(browser));
+        DriverManager.setDriver(DriverFactory.createDriver());
         DriverManager.getDriver().manage().window().maximize();
 
         // Optional: Print info
