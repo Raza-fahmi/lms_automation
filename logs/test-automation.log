@@ -1,42 +1,26 @@
-2026-05-08 20:48:08.827 [Test worker] INFO  core.listener.TestListener - ========== Test Suite Started: UI Tests ==========
-2026-05-08 20:48:09.032 [Test worker] INFO  core.listener.TestListener - ExtentReports initialized. Report will be saved to: D:\kuliah\dibimbing\project\dibimbing-lms-ui-api-automation/reports/extent-report_2026-05-08_20-48-08.html
-2026-05-08 20:48:09.048 [Test worker] INFO  core.listener.TestListener - ========== Test Suite Finished: UI Tests ==========
-2026-05-08 20:48:09.048 [Test worker] INFO  core.listener.TestListener - Total tests: 4, Passed: 0, Failed: 0, Skipped: 0
-2026-05-08 20:48:09.381 [Test worker] INFO  core.listener.TestListener - ExtentReports flushed successfully
-2026-05-08 20:48:09.381 [Test worker] INFO  core.listener.TestListener - ========== Test Suite Started: API Tests ==========
-2026-05-08 20:48:09.381 [Test worker] INFO  core.listener.TestListener - ExtentReports initialized. Report will be saved to: D:\kuliah\dibimbing\project\dibimbing-lms-ui-api-automation/reports/extent-report_2026-05-08_20-48-09.html
-2026-05-08 20:48:12.560 [Test worker] INFO  core.listener.TestListener - ---------- Test Started: testCreateEmployee ----------
-2026-05-08 20:48:13.896 [Test worker] INFO  core.listener.TestListener - Test PASSED: testCreateEmployee (Duration: 1334ms)
-2026-05-08 20:48:13.904 [Test worker] INFO  core.listener.TestListener - ---------- Test Started: testUpdateEmployee ----------
-2026-05-08 20:48:14.437 [Test worker] INFO  core.listener.TestListener - Test PASSED: testUpdateEmployee (Duration: 533ms)
-2026-05-08 20:48:14.439 [Test worker] INFO  core.listener.TestListener - ---------- Test Started: testDeleteEmployee ----------
-2026-05-08 20:48:15.041 [Test worker] INFO  core.listener.TestListener - Test PASSED: testDeleteEmployee (Duration: 602ms)
-2026-05-08 20:48:15.043 [Test worker] INFO  core.listener.TestListener - ========== Test Suite Finished: API Tests ==========
-2026-05-08 20:48:15.045 [Test worker] INFO  core.listener.TestListener - Total tests: 4, Passed: 3, Failed: 0, Skipped: 0
-2026-05-08 20:48:15.134 [Test worker] INFO  core.listener.TestListener - ExtentReports flushed successfully
-2026-05-08 20:48:44.016 [Test worker] INFO  core.listener.TestListener - ========== Test Suite Started: UI Tests ==========
-2026-05-08 20:48:44.187 [Test worker] INFO  core.listener.TestListener - ExtentReports initialized. Report will be saved to: D:\kuliah\dibimbing\project\dibimbing-lms-ui-api-automation/reports/extent-report_2026-05-08_20-48-44.html
-2026-05-08 20:48:48.390 [Test worker] INFO  core.listener.TestListener - ---------- Test Started: loginSuccess ----------
-2026-05-08 20:49:09.877 [Test worker] INFO  core.listener.TestListener - Test PASSED: loginSuccess (Duration: 21487ms)
-2026-05-08 20:49:16.838 [Test worker] INFO  core.listener.TestListener - ---------- Test Started: testAddNewEmployee ----------
-2026-05-08 20:49:28.178 [Test worker] INFO  core.listener.TestListener - Test PASSED: testAddNewEmployee (Duration: 11340ms)
-2026-05-08 20:49:33.700 [Test worker] INFO  core.listener.TestListener - ---------- Test Started: testSearchAndEditEmployee ----------
-2026-05-08 20:49:59.333 [Test worker] INFO  core.listener.TestListener - Test PASSED: testSearchAndEditEmployee (Duration: 25633ms)
-2026-05-08 20:50:05.674 [Test worker] INFO  core.listener.TestListener - ---------- Test Started: testSearchAndDeleteEmployee ----------
-2026-05-08 20:51:21.157 [Test worker] INFO  core.listener.TestListener - Test PASSED: testSearchAndDeleteEmployee (Duration: 75483ms)
-2026-05-08 20:51:21.553 [Test worker] INFO  core.listener.TestListener - ========== Test Suite Finished: UI Tests ==========
-2026-05-08 20:51:21.553 [Test worker] INFO  core.listener.TestListener - Total tests: 4, Passed: 4, Failed: 0, Skipped: 0
-2026-05-08 20:51:21.864 [Test worker] INFO  core.listener.TestListener - ExtentReports flushed successfully
-2026-05-08 20:51:21.867 [Test worker] INFO  core.listener.TestListener - ========== Test Suite Started: API Tests ==========
-2026-05-08 20:51:21.867 [Test worker] INFO  core.listener.TestListener - ExtentReports initialized. Report will be saved to: D:\kuliah\dibimbing\project\dibimbing-lms-ui-api-automation/reports/extent-report_2026-05-08_20-51-21.html
-2026-05-08 20:51:22.482 [Test worker] INFO  core.listener.TestListener - ---------- Test Started: testLoginSuccess ----------
-2026-05-08 20:51:24.743 [Test worker] INFO  core.listener.TestListener - Test PASSED: testLoginSuccess (Duration: 2261ms)
-2026-05-08 20:51:25.125 [Test worker] INFO  core.listener.TestListener - ---------- Test Started: testCreateEmployee ----------
-2026-05-08 20:51:25.714 [Test worker] INFO  core.listener.TestListener - Test PASSED: testCreateEmployee (Duration: 589ms)
-2026-05-08 20:51:25.718 [Test worker] INFO  core.listener.TestListener - ---------- Test Started: testUpdateEmployee ----------
-2026-05-08 20:51:29.294 [Test worker] INFO  core.listener.TestListener - Test PASSED: testUpdateEmployee (Duration: 3576ms)
-2026-05-08 20:51:29.296 [Test worker] INFO  core.listener.TestListener - ---------- Test Started: testDeleteEmployee ----------
-2026-05-08 20:51:29.821 [Test worker] INFO  core.listener.TestListener - Test PASSED: testDeleteEmployee (Duration: 525ms)
-2026-05-08 20:51:29.821 [Test worker] INFO  core.listener.TestListener - ========== Test Suite Finished: API Tests ==========
-2026-05-08 20:51:29.821 [Test worker] INFO  core.listener.TestListener - Total tests: 4, Passed: 4, Failed: 0, Skipped: 0
-2026-05-08 20:51:29.897 [Test worker] INFO  core.listener.TestListener - ExtentReports flushed successfully
+2026-05-16 08:58:29.574 [Test worker] INFO  core.listener.TestListener - ========== Test Suite Started: UI Tests ==========
+2026-05-16 08:58:29.792 [Test worker] INFO  core.listener.TestListener - ExtentReports initialized. Report will be saved to: D:\kuliah\dibimbing\project\dibimbing-lms-ui-api-automation/reports/extent-report_2026-05-16_08-58-29.html
+2026-05-16 08:58:32.834 [Test worker] INFO  core.listener.TestListener - ---------- Test Started: loginSuccess ----------
+2026-05-16 08:58:41.770 [Test worker] INFO  core.listener.TestListener - Test PASSED: loginSuccess (Duration: 8935ms)
+2026-05-16 08:58:46.183 [Test worker] INFO  core.listener.TestListener - ---------- Test Started: testAddNewEmployee ----------
+2026-05-16 08:59:02.512 [Test worker] INFO  core.listener.TestListener - Test PASSED: testAddNewEmployee (Duration: 16329ms)
+2026-05-16 08:59:07.638 [Test worker] INFO  core.listener.TestListener - ---------- Test Started: testSearchAndEditEmployee ----------
+2026-05-16 08:59:32.497 [Test worker] INFO  core.listener.TestListener - Test PASSED: testSearchAndEditEmployee (Duration: 24861ms)
+2026-05-16 08:59:41.981 [Test worker] INFO  core.listener.TestListener - ---------- Test Started: testSearchAndDeleteEmployee ----------
+2026-05-16 09:00:32.794 [Test worker] INFO  core.listener.TestListener - Test PASSED: testSearchAndDeleteEmployee (Duration: 50813ms)
+2026-05-16 09:00:33.440 [Test worker] INFO  core.listener.TestListener - ========== Test Suite Finished: UI Tests ==========
+2026-05-16 09:00:33.443 [Test worker] INFO  core.listener.TestListener - Total tests: 4, Passed: 4, Failed: 0, Skipped: 0
+2026-05-16 09:00:34.545 [Test worker] INFO  core.listener.TestListener - ExtentReports flushed successfully
+2026-05-16 09:00:34.553 [Test worker] INFO  core.listener.TestListener - ========== Test Suite Started: API Tests ==========
+2026-05-16 09:00:34.563 [Test worker] INFO  core.listener.TestListener - ExtentReports initialized. Report will be saved to: D:\kuliah\dibimbing\project\dibimbing-lms-ui-api-automation/reports/extent-report_2026-05-16_09-00-34.html
+2026-05-16 09:00:36.994 [Test worker] INFO  core.listener.TestListener - ---------- Test Started: testLoginSuccess ----------
+2026-05-16 09:00:43.896 [Test worker] INFO  core.listener.TestListener - Test PASSED: testLoginSuccess (Duration: 6902ms)
+2026-05-16 09:00:44.297 [Test worker] INFO  core.listener.TestListener - ---------- Test Started: testCreateEmployee ----------
+2026-05-16 09:00:44.774 [Test worker] INFO  core.listener.TestListener - Test PASSED: testCreateEmployee (Duration: 479ms)
+2026-05-16 09:00:44.783 [Test worker] INFO  core.listener.TestListener - ---------- Test Started: testUpdateEmployee ----------
+2026-05-16 09:00:45.092 [Test worker] INFO  core.listener.TestListener - Test PASSED: testUpdateEmployee (Duration: 309ms)
+2026-05-16 09:00:45.101 [Test worker] INFO  core.listener.TestListener - ---------- Test Started: testDeleteEmployee ----------
+2026-05-16 09:00:45.440 [Test worker] INFO  core.listener.TestListener - Test PASSED: testDeleteEmployee (Duration: 339ms)
+2026-05-16 09:00:45.443 [Test worker] INFO  core.listener.TestListener - ========== Test Suite Finished: API Tests ==========
+2026-05-16 09:00:45.443 [Test worker] INFO  core.listener.TestListener - Total tests: 4, Passed: 4, Failed: 0, Skipped: 0
+2026-05-16 09:00:45.716 [Test worker] INFO  core.listener.TestListener - ExtentReports flushed successfully
