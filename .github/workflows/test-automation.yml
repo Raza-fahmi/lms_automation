@@ -5,11 +5,11 @@ on:
     branches: [ main, develop, ci-cd-setup ]
   pull_request:
     branches: [ main ]
-  schedule:
+  # schedule:
     # Jalan setiap hari senin jam 07:00 WIB (00:00 UTC)
-    - cron: '0 0 * * 1'
-  workflow_dispatch:
-  # Bisa di-run manual dari GitHub UI
+  #   - cron: '0 0 * * 1'
+  # workflow_dispatch:
+  # # Bisa di-run manual dari GitHub UI
 
 jobs:
   test:
