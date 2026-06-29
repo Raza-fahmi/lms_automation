@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ main ]
   # schedule:
-    # Jalan setiap hari senin jam 07:00 WIB (00:00 UTC)
+  #   Jalan setiap hari senin jam 07:00 WIB (00:00 UTC)
   #   - cron: '0 0 * * 1'
   # workflow_dispatch:
   # # Bisa di-run manual dari GitHub UI
